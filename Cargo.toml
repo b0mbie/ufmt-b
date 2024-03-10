@@ -22,6 +22,10 @@ ufmt-write = { path = "write", version = "0.1.0" }
 std = ["ufmt-write/std"]
 
 [[test]]
+name = "gh36"
+required-features = ["std"]
+
+[[test]]
 name = "vs-std-write"
 required-features = ["std"]
 
