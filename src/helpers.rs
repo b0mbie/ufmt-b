@@ -1,8 +1,8 @@
-use crate::{uDebug, uWrite, Formatter};
+use crate::{UDebug, UWrite, Formatter};
 
 impl<'w, W> Formatter<'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Creates a `DebugList` builder designed to assist with creation of `uDebug` implementations
     /// for list-like structures.
@@ -90,7 +90,7 @@ where
 /// This can be constructed by the [`Formatter::debug_list`] method.
 pub struct DebugList<'f, 'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     first: bool,
     formatter: &'f mut Formatter<'w, W>,
@@ -98,10 +98,10 @@ where
 
 impl<W> DebugList<'_, '_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Adds a new entry to the list output.
-    pub fn entry(&mut self, entry: &impl uDebug) -> Result<&mut Self, W::Error> {
+    pub fn entry(&mut self, entry: &impl UDebug) -> Result<&mut Self, W::Error> {
         if self.first {
             self.first = false;
 
@@ -128,7 +128,7 @@ where
     /// Adds the contents of an iterator of entries to the list output.
     pub fn entries(
         &mut self,
-        entries: impl IntoIterator<Item = impl uDebug>,
+        entries: impl IntoIterator<Item = impl UDebug>,
     ) -> Result<&mut Self, W::Error> {
         for entry in entries {
             self.entry(&entry)?;
@@ -156,7 +156,7 @@ where
 /// This can be constructed by the [`Formatter::debug_map`] method.
 pub struct DebugMap<'f, 'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     first: bool,
     formatter: &'f mut Formatter<'w, W>,
@@ -164,10 +164,10 @@ where
 
 impl<W> DebugMap<'_, '_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Adds a new entry to the map output.
-    pub fn entry(&mut self, key: &impl uDebug, value: &impl uDebug) -> Result<&mut Self, W::Error> {
+    pub fn entry(&mut self, key: &impl UDebug, value: &impl UDebug) -> Result<&mut Self, W::Error> {
         if self.first {
             self.first = false;
 
@@ -196,7 +196,7 @@ where
     /// Adds the contents of an iterator of entries to the map output.
     pub fn entries(
         &mut self,
-        entries: impl IntoIterator<Item = (impl uDebug, impl uDebug)>,
+        entries: impl IntoIterator<Item = (impl UDebug, impl UDebug)>,
     ) -> Result<&mut Self, W::Error> {
         for (k, v) in entries.into_iter() {
             self.entry(&k, &v)?;
@@ -219,7 +219,7 @@ where
 /// This can be constructed by the [`Formatter::debug_set`] method.
 pub struct DebugSet<'f, 'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     first: bool,
     formatter: &'f mut Formatter<'w, W>,
@@ -227,10 +227,10 @@ where
 
 impl<W> DebugSet<'_, '_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Adds a new entry to the set output.
-    pub fn entry(&mut self, entry: &impl uDebug) -> Result<&mut Self, W::Error> {
+    pub fn entry(&mut self, entry: &impl UDebug) -> Result<&mut Self, W::Error> {
         if self.first {
             self.first = false;
 
@@ -257,7 +257,7 @@ where
     /// Adds the contents of an iterator of entries to the set output.
     pub fn entries(
         &mut self,
-        entries: impl IntoIterator<Item = impl uDebug>,
+        entries: impl IntoIterator<Item = impl UDebug>,
     ) -> Result<&mut Self, W::Error> {
         for entry in entries {
             self.entry(&entry)?;
@@ -280,7 +280,7 @@ where
 /// This can be constructed by the [`Formatter::debug_struct`] method.
 pub struct DebugStruct<'f, 'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     first: bool,
     formatter: &'f mut Formatter<'w, W>,
@@ -288,10 +288,10 @@ where
 
 impl<W> DebugStruct<'_, '_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Adds a new field to the generated struct output.
-    pub fn field(&mut self, name: &str, value: &impl uDebug) -> Result<&mut Self, W::Error> {
+    pub fn field(&mut self, name: &str, value: &impl UDebug) -> Result<&mut Self, W::Error> {
         if self.first {
             self.first = false;
 
@@ -349,7 +349,7 @@ where
 /// This can be constructed by the [`Formatter::debug_tuple`] method.
 pub struct DebugTuple<'f, 'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     fields: u8,
     first: bool,
@@ -359,10 +359,10 @@ where
 
 impl<W> DebugTuple<'_, '_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Adds a new field to the generated tuple struct output.
-    pub fn field(&mut self, value: &impl uDebug) -> Result<&mut Self, W::Error> {
+    pub fn field(&mut self, value: &impl UDebug) -> Result<&mut Self, W::Error> {
         self.fields += 1;
 
         if self.first {

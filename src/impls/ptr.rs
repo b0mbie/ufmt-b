@@ -1,6 +1,6 @@
 use core::{mem::MaybeUninit, slice, str};
 
-use crate::{uDebug, uWrite, Formatter};
+use crate::{UDebug, UWrite, Formatter};
 
 macro_rules! hex {
     ($self:expr, $f:expr, $N:expr) => {{
@@ -44,11 +44,11 @@ fn hex(mut n: usize, buf: &mut [MaybeUninit<u8>]) -> usize {
     i
 }
 
-impl<T> uDebug for *const T {
+impl<T> UDebug for *const T {
     #[cfg(target_pointer_width = "16")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         hex!(self, f, 6)
     }
@@ -56,7 +56,7 @@ impl<T> uDebug for *const T {
     #[cfg(target_pointer_width = "32")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         hex!(self, f, 10)
     }
@@ -64,17 +64,17 @@ impl<T> uDebug for *const T {
     #[cfg(target_pointer_width = "64")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         hex!(self, f, 18)
     }
 }
 
-impl<T> uDebug for *mut T {
+impl<T> UDebug for *mut T {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         (*self as *const T).fmt(f)
     }

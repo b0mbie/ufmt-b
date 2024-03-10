@@ -1,108 +1,108 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
-use crate::{uDebug, uDisplay, uWrite, Formatter};
+use crate::{UDebug, UDisplay, UWrite, Formatter};
 
-impl<T> uDebug for Box<T>
+impl<T> UDebug for Box<T>
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDebug>::fmt(self, f)
+        <T as UDebug>::fmt(self, f)
     }
 }
 
-impl<T> uDisplay for Box<T>
+impl<T> UDisplay for Box<T>
 where
-    T: uDisplay,
+    T: UDisplay,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDisplay>::fmt(self, f)
+        <T as UDisplay>::fmt(self, f)
     }
 }
 
-impl<K, V> uDebug for BTreeMap<K, V>
+impl<K, V> UDebug for BTreeMap<K, V>
 where
-    K: uDebug,
-    V: uDebug,
+    K: UDebug,
+    V: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.debug_map()?.entries(self)?.finish()
     }
 }
 
-impl<T> uDebug for BTreeSet<T>
+impl<T> UDebug for BTreeSet<T>
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.debug_set()?.entries(self)?.finish()
     }
 }
 
-impl<K, V> uDebug for HashMap<K, V>
+impl<K, V> UDebug for HashMap<K, V>
 where
-    K: uDebug,
-    V: uDebug,
+    K: UDebug,
+    V: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.debug_map()?.entries(self)?.finish()
     }
 }
 
-impl<T> uDebug for HashSet<T>
+impl<T> UDebug for HashSet<T>
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.debug_set()?.entries(self)?.finish()
     }
 }
 
 // TODO
-// impl uDebug for String {
+// impl UDebug for String {
 //     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
 //     where
-//         W: uWrite + ?Sized,
+//         W: UWrite + ?Sized,
 //     {
-//         <str as uDebug>::fmt(self, f)
+//         <str as UDebug>::fmt(self, f)
 //     }
 // }
 
-impl uDisplay for String {
+impl UDisplay for String {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <str as uDisplay>::fmt(self, f)
+        <str as UDisplay>::fmt(self, f)
     }
 }
 
-impl<T> uDebug for Vec<T>
+impl<T> UDebug for Vec<T>
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <[T] as uDebug>::fmt(self, f)
+        <[T] as UDebug>::fmt(self, f)
     }
 }

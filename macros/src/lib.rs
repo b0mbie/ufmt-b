@@ -19,15 +19,14 @@ use syn::{
     Data, DeriveInput, Expr, Fields, GenericParam, Ident, LitStr, Token,
 };
 
-/// Automatically derive the `uDebug` trait for a `struct` or `enum`
+/// Automatically derive the `UDebug` trait for a `struct` or `enum`.
 ///
-/// Supported items
+/// Supported items:
+/// - All kinds of `struct`s.
+/// - All kinds of `enum`s.
 ///
-/// - all kind of `struct`-s
-/// - all kind of `enum`-s
-///
-/// `union`-s are not supported
-#[proc_macro_derive(uDebug)]
+/// `union`s are not supported.
+#[proc_macro_derive(UDebug)]
 pub fn debug(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
@@ -35,7 +34,7 @@ pub fn debug(input: TokenStream) -> TokenStream {
 
     for param in &mut generics.params {
         if let GenericParam::Type(type_param) = param {
-            type_param.bounds.push(parse_quote!(ufmt::uDebug));
+            type_param.bounds.push(parse_quote!(ufmt::UDebug));
         }
     }
 
@@ -78,10 +77,10 @@ pub fn debug(input: TokenStream) -> TokenStream {
             };
 
             quote!(
-                impl #impl_generics ufmt::uDebug for #ident #ty_generics #where_clause {
+                impl #impl_generics ufmt::UDebug for #ident #ty_generics #where_clause {
                     fn fmt<W>(&self, f: &mut ufmt::Formatter<'_, W>) -> core::result::Result<(), W::Error>
                     where
-                        W: ufmt::uWrite + ?Sized,
+                        W: ufmt::UWrite + ?Sized,
                     {
                         #body
                     }
@@ -150,10 +149,10 @@ pub fn debug(input: TokenStream) -> TokenStream {
             };
 
             quote!(
-                impl #impl_generics ufmt::uDebug for #ident #ty_generics #where_clause {
+                impl #impl_generics ufmt::UDebug for #ident #ty_generics #where_clause {
                     fn fmt<W>(&self, f: &mut ufmt::Formatter<'_, W>) -> core::result::Result<(), W::Error>
                         where
-                        W: ufmt::uWrite + ?Sized,
+                        W: ufmt::UWrite + ?Sized,
                     {
                         #body
                     }
@@ -240,14 +239,14 @@ fn write(input: TokenStream, newline: bool) -> TokenStream {
 
             match piece {
                 Piece::Display => {
-                    exprs.push(quote!(ufmt::uDisplay::fmt(#pat, f)?;));
+                    exprs.push(quote!(ufmt::UDisplay::fmt(#pat, f)?;));
                 }
 
                 Piece::Debug { pretty } => {
                     exprs.push(if pretty {
-                        quote!(f.pretty(|f| ufmt::uDebug::fmt(#pat, f))?;)
+                        quote!(f.pretty(|f| ufmt::UDebug::fmt(#pat, f))?;)
                     } else {
-                        quote!(ufmt::uDebug::fmt(#pat, f)?;)
+                        quote!(ufmt::UDebug::fmt(#pat, f)?;)
                     });
                 }
                 Piece::Hex {
@@ -256,7 +255,7 @@ fn write(input: TokenStream, newline: bool) -> TokenStream {
                     pad_length,
                     prefix,
                 } => {
-                    exprs.push(quote!(ufmt::uDisplayHex::fmt_hex(#pat, f, ufmt::HexOptions{
+                    exprs.push(quote!(ufmt::UDisplayHex::fmt_hex(#pat, f, ufmt::HexOptions{
                         upper_case:#upper_case,
                         pad_char: #pad_char,
                         pad_length: #pad_length,

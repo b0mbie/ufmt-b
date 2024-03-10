@@ -1,4 +1,4 @@
-use crate::{uDisplayHex, uWrite, Formatter, HexOptions};
+use crate::{UDisplayHex, UWrite, Formatter, HexOptions};
 
 macro_rules! hex_format {
     ($buf:expr, $val:expr, $options:expr) => {{
@@ -21,14 +21,14 @@ macro_rules! hex_format {
 
 macro_rules! hex_pattern {
     ($itype: ty, $utype:ty) => {
-        impl uDisplayHex for $itype {
+        impl UDisplayHex for $itype {
             fn fmt_hex<W>(
                 &self,
                 fmt: &mut Formatter<'_, W>,
                 options: HexOptions,
             ) -> Result<(), W::Error>
             where
-                W: uWrite + ?Sized,
+                W: UWrite + ?Sized,
             {
                 let positive = if false && // the standard rust library doesn't format negative numbers with a minus sign
                 *self < 0 {
@@ -37,18 +37,18 @@ macro_rules! hex_pattern {
                 } else {
                     *self as $utype
                 };
-                <$utype as uDisplayHex>::fmt_hex(&positive, fmt, options)
+                <$utype as UDisplayHex>::fmt_hex(&positive, fmt, options)
             }
         }
 
-        impl uDisplayHex for $utype {
+        impl UDisplayHex for $utype {
             fn fmt_hex<W>(
                 &self,
                 fmt: &mut Formatter<'_, W>,
                 options: HexOptions,
             ) -> Result<(), W::Error>
             where
-                W: uWrite + ?Sized,
+                W: UWrite + ?Sized,
             {
                 let mut buffer = [b'0'; 2 * core::mem::size_of::<$utype>()];
                 let hex_string = hex_format!(buffer, *self, options);

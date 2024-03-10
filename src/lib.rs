@@ -1,50 +1,39 @@
-//! `μfmt`, a (6-40x) smaller, (2-9x) faster and panic-free alternative to `core::fmt`
+//! `μfmt`, a (6-40x) smaller, (2-9x) faster and panic-free alternative to [`core::fmt`].
 //!
 //! # Design goals
-//!
-//! From highest priority to lowest priority
-//!
-//! - Optimized for binary size and speed (rather than for compilation time)
-//! - No dynamic dispatch in generated code
-//! - No panicking branches in generated code, when optimized
-//! - No recursion where possible
+//! From highest priority to lowest priority:
+//! - Optimized for binary size and speed (rather than for compilation time).
+//! - No dynamic dispatch in generated code.
+//! - No panicking branches in generated code, when optimized.
+//! - No recursion where possible.
 //!
 //! # Features
-//!
-//! - [`Debug`] and [`Display`]-like traits
-//! - [`core::write!`][uwrite]-like macro
-//! - A generic [`Formatter<'_, impl uWrite>`][formatter] instead of a single `core::Formatter`; the
-//!   [`uWrite`] trait has an associated error type so each writer can choose its error type. For
-//!   example, the implementation for `std::String` uses [`Infallible`] as its error type.
-//! - [`core::fmt::Formatter::debug_struct`][debug_struct]-like API
-//! - [`#[derive(uDebug)]`][derive]
-//! - Pretty formatting (`{:#?}`) for `uDebug`
-//! - Hexadecimal formatting (`{:x}`) of integer primitives (e.g. `i32`) -- currently cannot be extended to other types
-//!
-//! [`Debug`]: trait.uDebug.html
-//! [`Display`]: trait.uDisplay.html
-//! [uwrite]: index.html#reexports
-//! [formatter]: struct.Formatter.html
-//! [`uWrite`]: trait.uWrite.html
-//! [`Infallible`]: https://doc.rust-lang.org/core/convert/enum.Infallible.html
-//! [debug_struct]: struct.Formatter.html#method.debug_struct
-//! [derive]: derive/index.html
+//! - [`Debug`](core::fmt::Debug) and [`Display`](core::fmt::Display)-like traits.
+//! - [`core::write!`]-like macro.
+//! - A generic [`Formatter<'_, impl UWrite>`] instead of a single [`core::fmt::Formatter`]; the
+//! [`UWrite`] trait has an associated error type so each writer can choose its error type. For
+//! example, the implementation for [`String`](`std::string::String`) uses
+//! [`Infallible`](`std::convert::Infallible`) as its error type.
+//! - [`Formatter::debug_struct`](core::fmt::Formatter::debug_struct)-like API.
+//! - [`UDebug`] derivation macro.
+//! - Pretty formatting (e.g. `{:#?}`) for [`UDebug`].
+//! 
+//! Hexadecimal formatting (e.g. `{:x}`) of integer primitives (e.g. [`i32`]) currently cannot be
+//! extended to other types.
 //!
 //! # Non-features
-//!
-//! These are out of scope
-//!
-//! - Padding, alignment and other formatting options
-//! - Formatting floating point numbers
+//! These are out of scope:
+//! - Padding, alignment and other formatting options.
+//! - Formatting floating point numbers.
 //!
 //! # Examples
-//!
 //! - `uwrite!` / `uwriteln!`
+//! With the `std` feature enabled:
+#![cfg_attr(not(feature = "std"), doc = "```ignore")]
+#![cfg_attr(feature = "std", doc = "```")]
+//! use ufmt::{derive::UDebug, uwrite};
 //!
-//! ```
-//! use ufmt::{derive::uDebug, uwrite};
-//!
-//! #[derive(uDebug)]
+//! #[derive(UDebug)]
 //! struct Pair { x: u32, y: u32 }
 //!
 //! let mut s = String::new();
@@ -54,11 +43,11 @@
 //! ```
 //!
 //! - Hexadecimal formatting
-//!
 //! Lowercase (`{:x}`), uppercase (`{:X}`), `0x`-prefix (`{:#x}`) and padding (`{:02x}`) are
 //! supported on primitive integer types.
-//!
-//! ```
+//! With the `std` feature enabled:
+#![cfg_attr(not(feature = "std"), doc = "```ignore")]
+#![cfg_attr(feature = "std", doc = "```")]
 //! use ufmt::uwrite;
 //!
 //! let mut s = String::new();
@@ -66,19 +55,17 @@
 //! assert_eq!(s, "0x0042");
 //! ```
 //!
-//! - implementing `uWrite`
-//!
-//! When implementing the `uWrite` trait you should prefer the `ufmt_write::uWrite` crate over the
-//! `ufmt::uWrite` crate for better forward compatibility.
-//!
+//! - Implementing [`UWrite`].
+//! When implementing [`UWrite`], you should prefer the [`ufmt_write`] crate over the re-export for
+//! better forward compatibility.
 //! ```
 //! use core::convert::Infallible;
 //!
-//! use ufmt_write::uWrite;
+//! use ufmt_write::UWrite;
 //!
 //! struct MyWriter;
 //!
-//! impl uWrite for MyWriter {
+//! impl UWrite for MyWriter {
 //!     type Error = Infallible;
 //!
 //!     fn write_str(&mut self, s: &str) -> Result<(), Self::Error> {
@@ -88,8 +75,7 @@
 //! }
 //! ```
 //!
-//! - writing a `macro_rules!` macro that uses `uwrite!` (or `uwriteln!`).
-//!
+//! - Writing a `macro_rules!` macro that uses [`uwrite!`] (or [`uwriteln!`]).
 //! ```
 //! // like `std::format!` it returns a `std::String` but uses `uwrite!` instead of `write!`
 //! macro_rules! uformat {
@@ -105,7 +91,6 @@
 //! ```
 //!
 //! # Benchmarks
-//!
 //! The benchmarks ran on a ARM Cortex-M3 chip (`thumbv7m-none-eabi`).
 //!
 //! The benchmarks were compiled with `nightly-2019-05-01`, `-C opt-level=3`, `lto = true`,
@@ -138,7 +123,6 @@
 //!
 //!
 //! Benchmark program:
-//!
 //! ``` ignore
 //! static X: AtomicI32 = AtomicI32::new(i32::MIN); // or `0`
 //! static Y: AtomicI32 = AtomicI32::new(i32::MIN); // or `0`
@@ -161,15 +145,14 @@
 //! ```
 //!
 //! Writer used in the benchmarks:
-//!
 //! ```
 //! use core::{convert::Infallible, fmt, ptr};
 //!
-//! use ufmt::uWrite;
+//! use ufmt::UWrite;
 //!
 //! struct W;
 //!
-//! impl uWrite for W {
+//! impl UWrite for W {
 //!     type Error = Infallible;
 //!
 //!     fn write_str(&mut self, s: &str) -> Result<(), Infallible> {
@@ -193,7 +176,6 @@
 //! ```
 //!
 //! # Minimum Supported Rust Version (MSRV)
-//!
 //! This crate does *not* have a Minimum Supported Rust Version (MSRV) and may make use of language
 //! features and API in the standard library available in the latest stable Rust version.
 //!
@@ -211,22 +193,20 @@ extern crate self as ufmt;
 
 use core::str;
 
-pub use ufmt_write::uWrite;
+pub use ufmt_write::UWrite;
 
 /// Write formatted data into a buffer.
 ///
 /// This macro accepts a format string, a list of arguments, and a 'writer'. Arguments will be
 /// formatted according to the specified format string and the result will be passed to the writer.
-/// The writer must have type `[&mut] impl uWrite` or `[&mut] ufmt::Formatter<'_, impl uWrite>`. The
-/// macro returns the associated `Error` type of the `uWrite`-r.
+/// The writer must have type `[&mut] impl UWrite` or `[&mut] ufmt::Formatter<'_, impl UWrite>`. The
+/// macro returns the associated `Error` type of the `UWrite`-r.
 ///
 /// The syntax is similar to [`core::write!`] but only a handful of argument types are accepted:
 ///
-/// [`core::write!`]: https://doc.rust-lang.org/core/macro.write.html
-///
-/// - `{}` - `uDisplay`
-/// - `{:?}` - `uDebug`
-/// - `{:#?}` - "pretty" `uDebug`
+/// - `{}` - [`UDisplay`]
+/// - `{:?}` - [`UDebug`]
+/// - `{:#?}` - "pretty" [`UDebug`]
 ///
 /// Named parameters and "specified" positional parameters (`{0}`) are not supported.
 ///
@@ -235,7 +215,7 @@ pub use ufmt_macros::uwrite;
 
 /// Write formatted data into a buffer, with a newline appended.
 ///
-/// See [`uwrite!`](macro.uwrite.html) for more details.
+/// See [`uwrite!`] for more details.
 pub use ufmt_macros::uwriteln;
 
 pub use crate::helpers::{DebugList, DebugMap, DebugStruct, DebugTuple};
@@ -244,25 +224,23 @@ mod helpers;
 mod impls;
 /// Derive macros.
 pub mod derive {
-    pub use ufmt_macros::uDebug;
+    pub use ufmt_macros::UDebug;
 }
 
 /// Trait that aims to behave like [`core::fmt::Debug`].
-#[allow(non_camel_case_types)]
-pub trait uDebug {
+pub trait UDebug {
     /// Formats the value using the given formatter.
     fn fmt<W>(&self, _: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized;
+        W: UWrite + ?Sized;
 }
 
 /// Trait that aims to behave like [`core::fmt::Display`].
-#[allow(non_camel_case_types)]
-pub trait uDisplay {
+pub trait UDisplay {
     /// Formats the value using the given formatter.
     fn fmt<W>(&self, _: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized;
+        W: UWrite + ?Sized;
 }
 
 /// Options for formatting hexadecimal numbers.
@@ -283,17 +261,17 @@ pub struct HexOptions {
 
 impl HexOptions {
     /// Applies the various padding/prefix options while writing the `payload` string.
-    pub fn with_stuff<W: uWrite + ?Sized>(
+    pub fn with_stuff<W: UWrite + ?Sized>(
         &self,
         fmt: &mut Formatter<'_, W>,
         payload: &str,
-    ) -> Result<(), <W as uWrite>::Error> {
+    ) -> Result<(), <W as UWrite>::Error> {
         let pad_before = self.ox_prefix && self.pad_char == b' ';
 
         let pad = self.pad_length as isize
             - (if self.ox_prefix { 2 } else { 0 } + payload.len()) as isize;
 
-        let do_pad = |fmt: &mut Formatter<'_, W>, pad: isize| -> Result<(), <W as uWrite>::Error> {
+        let do_pad = |fmt: &mut Formatter<'_, W>, pad: isize| -> Result<(), <W as UWrite>::Error> {
             if pad > 0 {
                 for _ in 0..pad {
                     // miri considers the `write_char` defined in `ufmt-write` v0.1.0 unsound
@@ -307,7 +285,7 @@ impl HexOptions {
         let do_prefix = |fmt: &mut Formatter<'_, W>,
                          go: bool,
                          upper_case: bool|
-         -> Result<(), <W as uWrite>::Error> {
+         -> Result<(), <W as UWrite>::Error> {
             if go {
                 fmt.write_str(if upper_case { "0X" } else { "0x" })
             } else {
@@ -331,19 +309,17 @@ impl HexOptions {
 /// This is currently an implementation detail and not subject to semver guarantees.
 /// Do not use this outside the `ufmt` crate.
 #[doc(hidden)]
-#[allow(non_camel_case_types)]
-pub trait uDisplayHex {
+pub trait UDisplayHex {
     /// Formats the value using the given formatter.
     fn fmt_hex<W>(&self, _: &mut Formatter<'_, W>, options: HexOptions) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized;
+        W: UWrite + ?Sized;
 }
 
 /// Configuration for formatting.
-#[allow(non_camel_case_types)]
 pub struct Formatter<'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     indentation: u8,
     pretty: bool,
@@ -352,7 +328,7 @@ where
 
 impl<'w, W> Formatter<'w, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     /// Creates a formatter from the given writer.
     pub fn new(writer: &'w mut W) -> Self {
@@ -398,17 +374,17 @@ where
 // Implementation detail of the `uwrite*!` macros.
 #[doc(hidden)]
 pub trait UnstableDoAsFormatter {
-    type Writer: uWrite + ?Sized;
+    type Writer: UWrite + ?Sized;
 
     fn do_as_formatter(
         &mut self,
-        f: impl FnOnce(&mut Formatter<'_, Self::Writer>) -> Result<(), <Self::Writer as uWrite>::Error>,
-    ) -> Result<(), <Self::Writer as uWrite>::Error>;
+        f: impl FnOnce(&mut Formatter<'_, Self::Writer>) -> Result<(), <Self::Writer as UWrite>::Error>,
+    ) -> Result<(), <Self::Writer as UWrite>::Error>;
 }
 
 impl<W> UnstableDoAsFormatter for W
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     type Writer = W;
 
@@ -422,7 +398,7 @@ where
 
 impl<W> UnstableDoAsFormatter for Formatter<'_, W>
 where
-    W: uWrite + ?Sized,
+    W: UWrite + ?Sized,
 {
     type Writer = W;
 

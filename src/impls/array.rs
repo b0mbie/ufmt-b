@@ -1,13 +1,13 @@
-use crate::{uDebug, uWrite, Formatter};
+use crate::{UDebug, UWrite, Formatter};
 
-impl<T, const N: usize> uDebug for [T; N]
+impl<T, const N: usize> UDebug for [T; N]
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <[T] as uDebug>::fmt(self, f)
+        <[T] as UDebug>::fmt(self, f)
     }
 }

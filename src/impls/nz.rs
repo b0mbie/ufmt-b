@@ -3,28 +3,28 @@ use core::num::{
     NonZeroU64, NonZeroU8, NonZeroUsize,
 };
 
-use crate::{uDebug, uDisplay, uWrite, Formatter};
+use crate::{UDebug, UDisplay, UWrite, Formatter};
 
 macro_rules! nz {
     ($($NZ:ident : $inner:ident,)*) => {
         $(
-            impl uDebug for $NZ {
+            impl UDebug for $NZ {
                 #[inline(always)]
                 fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
                 where
-                    W: uWrite + ?Sized,
+                    W: UWrite + ?Sized,
                 {
-                    <$inner as uDebug>::fmt(&self.get(), f)
+                    <$inner as UDebug>::fmt(&self.get(), f)
                 }
             }
 
-            impl uDisplay for $NZ {
+            impl UDisplay for $NZ {
                 #[inline(always)]
                 fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
                 where
-                    W: uWrite + ?Sized,
+                    W: UWrite + ?Sized,
                 {
-                    <$inner as uDisplay>::fmt(&self.get(), f)
+                    <$inner as UDisplay>::fmt(&self.get(), f)
                 }
             }
         )*

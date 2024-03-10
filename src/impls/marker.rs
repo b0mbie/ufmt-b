@@ -1,4 +1,4 @@
-use crate::{uDebug, uWrite, Formatter};
+use crate::{UDebug, UWrite, Formatter};
 
 use core::any::type_name;
 use core::marker::{
@@ -6,10 +6,10 @@ use core::marker::{
 	PhantomPinned
 };
 
-impl<T> uDebug for PhantomData<T> {
+impl<T> UDebug for PhantomData<T> {
 	fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
 	where
-		W: uWrite + ?Sized
+		W: UWrite + ?Sized
 	{
 		f.write_str("PhantomData<")?;
 		f.write_str(type_name::<T>())?;
@@ -17,10 +17,10 @@ impl<T> uDebug for PhantomData<T> {
 	}
 }
 
-impl uDebug for PhantomPinned {
+impl UDebug for PhantomPinned {
 	fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
 	where
-		W: uWrite + ?Sized
+		W: UWrite + ?Sized
 	{
 		f.write_str("PhantomPinned")
 	}

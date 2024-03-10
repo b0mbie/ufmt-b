@@ -15,8 +15,7 @@ unsafe fn uninitialized<T>() -> T {
 }
 
 /// A collection of methods that are required / used to format a message into a stream.
-#[allow(non_camel_case_types)]
-pub trait uWrite {
+pub trait UWrite {
     /// The error associated to this writer
     type Error;
 
@@ -38,7 +37,7 @@ pub trait uWrite {
 }
 
 #[cfg(feature = "std")]
-impl uWrite for String {
+impl UWrite for String {
     type Error = Infallible;
 
     fn write_str(&mut self, s: &str) -> Result<(), Infallible> {

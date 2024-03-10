@@ -12,7 +12,7 @@
 use core::{convert::Infallible, fmt, str};
 
 use heapless::String;
-use ufmt_write::uWrite;
+use ufmt_write::UWrite;
 
 macro_rules! assume_unreachable {
     () => {
@@ -27,14 +27,14 @@ macro_rules! assume_unreachable {
 /// A write adapter that ignores all errors
 pub struct Ignore<W>
 where
-    W: uWrite,
+    W: UWrite,
 {
     writer: W,
 }
 
 impl<W> Ignore<W>
 where
-    W: uWrite,
+    W: UWrite,
 {
     /// Creates a new `Ignore` adapter
     pub fn new(writer: W) -> Self {
@@ -47,9 +47,9 @@ where
     }
 }
 
-impl<W> uWrite for Ignore<W>
+impl<W> UWrite for Ignore<W>
 where
-    W: uWrite,
+    W: UWrite,
 {
     type Error = Infallible;
 
@@ -62,7 +62,7 @@ where
 /// A write adapter that buffers writes and automatically flushes on newlines
 pub struct LineBuffered<W, const N: usize>
 where
-    W: uWrite,
+    W: UWrite,
 {
     buffer: String<N>,
     writer: W,
@@ -70,7 +70,7 @@ where
 
 impl<W, const N: usize> LineBuffered<W, N>
 where
-    W: uWrite,
+    W: UWrite,
 {
     /// Creates a new `LineBuffered` adapter
     pub fn new(writer: W) -> Self {
@@ -110,9 +110,9 @@ where
     }
 }
 
-impl<W, const N: usize> uWrite for LineBuffered<W, N>
+impl<W, const N: usize> UWrite for LineBuffered<W, N>
 where
-    W: uWrite,
+    W: UWrite,
 {
     type Error = W::Error;
 
@@ -152,7 +152,7 @@ pub struct WriteAdapter<W>(pub W)
 where
     W: fmt::Write;
 
-impl<W> uWrite for WriteAdapter<W>
+impl<W> UWrite for WriteAdapter<W>
 where
     W: fmt::Write,
 {

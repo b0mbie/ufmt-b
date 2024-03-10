@@ -1,6 +1,6 @@
 use core::{mem::MaybeUninit, slice, str};
 
-use crate::{uDebug, uDisplay, uWrite, Formatter};
+use crate::{UDebug, UDisplay, UWrite, Formatter};
 
 macro_rules! ixx {
     ($uxx:ty, $n:expr, $buf:expr) => {{
@@ -41,10 +41,10 @@ fn isize(n: isize, buf: &mut [MaybeUninit<u8>]) -> &str {
     ixx!(usize, n, buf)
 }
 
-impl uDebug for i8 {
+impl UDebug for i8 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 4];
 
@@ -52,20 +52,20 @@ impl uDebug for i8 {
     }
 }
 
-impl uDisplay for i8 {
+impl UDisplay for i8 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i8 as uDebug>::fmt(self, f)
+        <i8 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for i16 {
+impl UDebug for i16 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 6];
 
@@ -73,21 +73,21 @@ impl uDebug for i16 {
     }
 }
 
-impl uDisplay for i16 {
+impl UDisplay for i16 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i16 as uDebug>::fmt(self, f)
+        <i16 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for i32 {
+impl UDebug for i32 {
     #[cfg(not(target_pointer_width = "16"))]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 11];
 
@@ -97,7 +97,7 @@ impl uDebug for i32 {
     #[cfg(target_pointer_width = "16")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 11];
 
@@ -106,21 +106,21 @@ impl uDebug for i32 {
     }
 }
 
-impl uDisplay for i32 {
+impl UDisplay for i32 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i32 as uDebug>::fmt(self, f)
+        <i32 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for i64 {
+impl UDebug for i64 {
     #[cfg(any(target_pointer_width = "32", target_pointer_width = "16"))]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 20];
 
@@ -131,7 +131,7 @@ impl uDebug for i64 {
     #[cfg(target_pointer_width = "64")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 20];
 
@@ -139,20 +139,20 @@ impl uDebug for i64 {
     }
 }
 
-impl uDisplay for i64 {
+impl UDisplay for i64 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i64 as uDebug>::fmt(self, f)
+        <i64 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for i128 {
+impl UDebug for i128 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 40];
 
@@ -161,70 +161,70 @@ impl uDebug for i128 {
     }
 }
 
-impl uDisplay for i128 {
+impl UDisplay for i128 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i128 as uDebug>::fmt(self, f)
+        <i128 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for isize {
+impl UDebug for isize {
     #[cfg(target_pointer_width = "16")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i16 as uDebug>::fmt(&(*self as i16), f)
+        <i16 as UDebug>::fmt(&(*self as i16), f)
     }
 
     #[cfg(target_pointer_width = "32")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i32 as uDebug>::fmt(&(*self as i32), f)
+        <i32 as UDebug>::fmt(&(*self as i32), f)
     }
 
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i64 as uDebug>::fmt(&(*self as i64), f)
+        <i64 as UDebug>::fmt(&(*self as i64), f)
     }
 }
 
-impl uDisplay for isize {
+impl UDisplay for isize {
     #[cfg(target_pointer_width = "16")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i16 as uDisplay>::fmt(&(*self as i16), f)
+        <i16 as UDisplay>::fmt(&(*self as i16), f)
     }
 
     #[cfg(target_pointer_width = "32")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i32 as uDisplay>::fmt(&(*self as i32), f)
+        <i32 as UDisplay>::fmt(&(*self as i32), f)
     }
 
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <i64 as uDisplay>::fmt(&(*self as i64), f)
+        <i64 as UDisplay>::fmt(&(*self as i64), f)
     }
 }

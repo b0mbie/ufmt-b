@@ -8,12 +8,12 @@ mod third_party {
     }
 }
 
-use ufmt::{derive::uDebug, uwrite, uwriteln};
+use ufmt::{derive::UDebug, uwrite, uwriteln};
 
 #[allow(unused_imports)]
 use crate::third_party::Result::{self, Err, Ok};
 
-#[derive(uDebug)]
+#[derive(UDebug)]
 struct Pair {
     x: u32,
     y: u32,

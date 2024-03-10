@@ -1,7 +1,7 @@
 use core::convert::Infallible;
 use std::collections::{BTreeMap, BTreeSet};
 
-use ufmt::{derive::uDebug, uDebug, uWrite, uwrite, uwriteln, Formatter};
+use ufmt::{derive::UDebug, UDebug, UWrite, uwrite, uwriteln, Formatter};
 
 macro_rules! uformat {
     ($($tt:tt)*) => {{
@@ -40,7 +40,7 @@ fn core() {
 
 #[test]
 fn recursion() {
-    #[derive(uDebug, Debug)]
+    #[derive(UDebug, Debug)]
     struct Node {
         value: i32,
         next: Option<Box<Node>>,
@@ -138,25 +138,25 @@ fn set() {
 
 #[test]
 fn struct_() {
-    #[derive(Debug, uDebug)]
+    #[derive(Debug, UDebug)]
     struct Braces {}
 
-    #[derive(Debug, uDebug)]
+    #[derive(Debug, UDebug)]
     struct Parens();
 
-    #[derive(Debug, Default, uDebug)]
+    #[derive(Debug, Default, UDebug)]
     struct I32(i32);
 
-    #[derive(Debug, Default, uDebug)]
+    #[derive(Debug, Default, UDebug)]
     struct Tuple(i32, i32);
 
-    #[derive(Debug, Default, uDebug)]
+    #[derive(Debug, Default, UDebug)]
     struct Pair {
         x: i32,
         y: i32,
     }
 
-    #[derive(Debug, Default, uDebug)]
+    #[derive(Debug, Default, UDebug)]
     struct Nested {
         first: Pair,
         second: Pair,
@@ -179,7 +179,7 @@ fn struct_() {
 
 #[test]
 fn enum_() {
-    #[derive(Debug, uDebug)]
+    #[derive(Debug, UDebug)]
     enum X {
         A,
         B(u8, u16),
@@ -253,15 +253,15 @@ fn uwriteln() {
 
 #[test]
 fn formatter_uwrite() {
-    #[derive(uDebug)]
+    #[derive(UDebug)]
     struct X;
 
     struct Y;
 
-    impl uDebug for Y {
+    impl UDebug for Y {
         fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
         where
-            W: uWrite + ?Sized,
+            W: UWrite + ?Sized,
         {
             uwrite!(f, "{:?}", X)
         }
@@ -272,12 +272,12 @@ fn formatter_uwrite() {
 
 #[test]
 fn generic() {
-    #[derive(uDebug, Debug)]
+    #[derive(UDebug, Debug)]
     struct X<T>(T);
 
     cmp!("{:?}", X(0));
 
-    #[derive(uDebug, Debug)]
+    #[derive(UDebug, Debug)]
     enum Y<T> {
         Z(T),
     }
@@ -312,7 +312,7 @@ fn dst() {
         }
     }
 
-    impl uWrite for Cursor<[u8]> {
+    impl UWrite for Cursor<[u8]> {
         type Error = Infallible;
 
         fn write_str(&mut self, s: &str) -> Result<(), Infallible> {

@@ -1,9 +1,9 @@
-use crate::{uDebug, uDisplay, uWrite, Formatter};
+use crate::{UDebug, UDisplay, UWrite, Formatter};
 
-impl uDebug for bool {
+impl UDebug for bool {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         if *self {
             f.write_str("true")
@@ -13,13 +13,13 @@ impl uDebug for bool {
     }
 }
 
-impl uDisplay for bool {
+impl UDisplay for bool {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <bool as uDebug>::fmt(self, f)
+        <bool as UDebug>::fmt(self, f)
     }
 }
 
@@ -37,23 +37,23 @@ impl uDisplay for bool {
 //     }
 // }
 
-impl uDisplay for char {
+impl UDisplay for char {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.write_char(*self)
     }
 }
 
-impl<T> uDebug for [T]
+impl<T> UDebug for [T]
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.debug_list()?.entries(self)?.finish()
     }
@@ -92,75 +92,75 @@ where
 //     }
 // }
 
-impl uDisplay for str {
+impl UDisplay for str {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.write_str(self)
     }
 }
 
-impl<T> uDebug for &'_ T
+impl<T> UDebug for &'_ T
 where
-    T: uDebug + ?Sized,
+    T: UDebug + ?Sized,
 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDebug>::fmt(self, f)
+        <T as UDebug>::fmt(self, f)
     }
 }
 
-impl<T> uDisplay for &'_ T
+impl<T> UDisplay for &'_ T
 where
-    T: uDisplay + ?Sized,
+    T: UDisplay + ?Sized,
 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDisplay>::fmt(self, f)
+        <T as UDisplay>::fmt(self, f)
     }
 }
 
-impl<T> uDebug for &'_ mut T
+impl<T> UDebug for &'_ mut T
 where
-    T: uDebug + ?Sized,
+    T: UDebug + ?Sized,
 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDebug>::fmt(self, f)
+        <T as UDebug>::fmt(self, f)
     }
 }
 
-impl<T> uDisplay for &'_ mut T
+impl<T> UDisplay for &'_ mut T
 where
-    T: uDisplay + ?Sized,
+    T: UDisplay + ?Sized,
 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <T as uDisplay>::fmt(self, f)
+        <T as UDisplay>::fmt(self, f)
     }
 }
 
-impl<T> uDebug for Option<T>
+impl<T> UDebug for Option<T>
 where
-    T: uDebug,
+    T: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         match self {
             None => f.write_str("None"),
@@ -169,14 +169,14 @@ where
     }
 }
 
-impl<T, E> uDebug for Result<T, E>
+impl<T, E> UDebug for Result<T, E>
 where
-    T: uDebug,
-    E: uDebug,
+    T: UDebug,
+    E: UDebug,
 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         match self {
             Err(e) => f.debug_tuple("Err")?.field(e)?.finish(),

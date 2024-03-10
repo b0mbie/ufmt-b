@@ -1,14 +1,14 @@
-use crate::{uDebug, uWrite, Formatter};
+use crate::{UDebug, UWrite, Formatter};
 
 macro_rules! tuple {
     ($($T:ident),*; $($i:tt),*) => {
-        impl<$($T,)*> uDebug for ($($T,)*)
+        impl<$($T,)*> UDebug for ($($T,)*)
         where
-            $($T: uDebug,)*
+            $($T: UDebug,)*
         {
             fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
             where
-                W: uWrite + ?Sized,
+                W: UWrite + ?Sized,
             {
                 f.debug_tuple("")?$(.field(&self.$i)?)*.finish()
             }
@@ -17,10 +17,10 @@ macro_rules! tuple {
     }
 }
 
-impl uDebug for () {
+impl UDebug for () {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         f.write_str("()")
     }

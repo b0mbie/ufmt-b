@@ -1,6 +1,6 @@
 use core::{mem::MaybeUninit, slice, str};
 
-use crate::{uDebug, uDisplay, uWrite, Formatter};
+use crate::{UDebug, UDisplay, UWrite, Formatter};
 
 macro_rules! uxx {
     ($n:expr, $buf:expr) => {{
@@ -27,10 +27,10 @@ fn usize(n: usize, buf: &mut [MaybeUninit<u8>]) -> &str {
     uxx!(n, buf)
 }
 
-impl uDebug for u8 {
+impl UDebug for u8 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 3];
 
@@ -38,20 +38,20 @@ impl uDebug for u8 {
     }
 }
 
-impl uDisplay for u8 {
+impl UDisplay for u8 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u8 as uDebug>::fmt(self, f)
+        <u8 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for u16 {
+impl UDebug for u16 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 5];
 
@@ -59,21 +59,21 @@ impl uDebug for u16 {
     }
 }
 
-impl uDisplay for u16 {
+impl UDisplay for u16 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u16 as uDebug>::fmt(self, f)
+        <u16 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for u32 {
+impl UDebug for u32 {
     #[cfg(not(target_pointer_width = "16"))]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 10];
 
@@ -83,7 +83,7 @@ impl uDebug for u32 {
     #[cfg(target_pointer_width = "16")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 10];
 
@@ -92,21 +92,21 @@ impl uDebug for u32 {
     }
 }
 
-impl uDisplay for u32 {
+impl UDisplay for u32 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u32 as uDebug>::fmt(self, f)
+        <u32 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for u64 {
+impl UDebug for u64 {
     #[cfg(any(target_pointer_width = "32", target_pointer_width = "16"))]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 20];
 
@@ -117,7 +117,7 @@ impl uDebug for u64 {
     #[cfg(target_pointer_width = "64")]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::uninit(); 20];
 
@@ -125,20 +125,20 @@ impl uDebug for u64 {
     }
 }
 
-impl uDisplay for u64 {
+impl UDisplay for u64 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u64 as uDebug>::fmt(self, f)
+        <u64 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for u128 {
+impl UDebug for u128 {
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
         let mut buf = [MaybeUninit::<u8>::uninit(); 39];
 
@@ -147,70 +147,70 @@ impl uDebug for u128 {
     }
 }
 
-impl uDisplay for u128 {
+impl UDisplay for u128 {
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u128 as uDebug>::fmt(self, f)
+        <u128 as UDebug>::fmt(self, f)
     }
 }
 
-impl uDebug for usize {
+impl UDebug for usize {
     #[cfg(target_pointer_width = "16")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u16 as uDebug>::fmt(&(*self as u16), f)
+        <u16 as UDebug>::fmt(&(*self as u16), f)
     }
 
     #[cfg(target_pointer_width = "32")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u32 as uDebug>::fmt(&(*self as u32), f)
+        <u32 as UDebug>::fmt(&(*self as u32), f)
     }
 
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u64 as uDebug>::fmt(&(*self as u64), f)
+        <u64 as UDebug>::fmt(&(*self as u64), f)
     }
 }
 
-impl uDisplay for usize {
+impl UDisplay for usize {
     #[cfg(target_pointer_width = "16")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u16 as uDisplay>::fmt(&(*self as u16), f)
+        <u16 as UDisplay>::fmt(&(*self as u16), f)
     }
 
     #[cfg(target_pointer_width = "32")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u32 as uDisplay>::fmt(&(*self as u32), f)
+        <u32 as UDisplay>::fmt(&(*self as u32), f)
     }
 
     #[cfg(target_pointer_width = "64")]
     #[inline(always)]
     fn fmt<W>(&self, f: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
-        W: uWrite + ?Sized,
+        W: UWrite + ?Sized,
     {
-        <u64 as uDisplay>::fmt(&(*self as u64), f)
+        <u64 as UDisplay>::fmt(&(*self as u64), f)
     }
 }
