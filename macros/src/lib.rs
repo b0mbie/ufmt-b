@@ -34,7 +34,7 @@ pub fn debug(input: TokenStream) -> TokenStream {
 
     for param in &mut generics.params {
         if let GenericParam::Type(type_param) = param {
-            type_param.bounds.push(parse_quote!(ufmt::UDebug));
+            type_param.bounds.push(parse_quote!(ufmt_b::UDebug));
         }
     }
 
@@ -77,10 +77,10 @@ pub fn debug(input: TokenStream) -> TokenStream {
             };
 
             quote!(
-                impl #impl_generics ufmt::UDebug for #ident #ty_generics #where_clause {
-                    fn fmt<W>(&self, f: &mut ufmt::Formatter<'_, W>) -> core::result::Result<(), W::Error>
+                impl #impl_generics ufmt_b::UDebug for #ident #ty_generics #where_clause {
+                    fn fmt<W>(&self, f: &mut ufmt_b::Formatter<'_, W>) -> core::result::Result<(), W::Error>
                     where
-                        W: ufmt::UWrite + ?Sized,
+                        W: ufmt_b::UWrite + ?Sized,
                     {
                         #body
                     }
@@ -149,10 +149,10 @@ pub fn debug(input: TokenStream) -> TokenStream {
             };
 
             quote!(
-                impl #impl_generics ufmt::UDebug for #ident #ty_generics #where_clause {
-                    fn fmt<W>(&self, f: &mut ufmt::Formatter<'_, W>) -> core::result::Result<(), W::Error>
+                impl #impl_generics ufmt_b::UDebug for #ident #ty_generics #where_clause {
+                    fn fmt<W>(&self, f: &mut ufmt_b::Formatter<'_, W>) -> core::result::Result<(), W::Error>
                         where
-                        W: ufmt::UWrite + ?Sized,
+                        W: ufmt_b::UWrite + ?Sized,
                     {
                         #body
                     }
@@ -239,14 +239,14 @@ fn write(input: TokenStream, newline: bool) -> TokenStream {
 
             match piece {
                 Piece::Display => {
-                    exprs.push(quote!(ufmt::UDisplay::fmt(#pat, f)?;));
+                    exprs.push(quote!(ufmt_b::UDisplay::fmt(#pat, f)?;));
                 }
 
                 Piece::Debug { pretty } => {
                     exprs.push(if pretty {
-                        quote!(f.pretty(|f| ufmt::UDebug::fmt(#pat, f))?;)
+                        quote!(f.pretty(|f| ufmt_b::UDebug::fmt(#pat, f))?;)
                     } else {
-                        quote!(ufmt::UDebug::fmt(#pat, f)?;)
+                        quote!(ufmt_b::UDebug::fmt(#pat, f)?;)
                     });
                 }
                 Piece::Hex {
@@ -255,7 +255,7 @@ fn write(input: TokenStream, newline: bool) -> TokenStream {
                     pad_length,
                     prefix,
                 } => {
-                    exprs.push(quote!(ufmt::UDisplayHex::fmt_hex(#pat, f, ufmt::HexOptions{
+                    exprs.push(quote!(ufmt_b::UDisplayHex::fmt_hex(#pat, f, ufmt_b::HexOptions{
                         upper_case:#upper_case,
                         pad_char: #pad_char,
                         pad_length: #pad_length,
@@ -268,7 +268,7 @@ fn write(input: TokenStream, newline: bool) -> TokenStream {
 
     quote!(match (#(#args),*) {
         (#(#pats),*) => {
-            use ufmt::UnstableDoAsFormatter as _;
+            use ufmt_b::UnstableDoAsFormatter as _;
 
             (#formatter).do_as_formatter(|f| {
                 #(#exprs)*

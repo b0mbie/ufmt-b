@@ -8,7 +8,7 @@ mod third_party {
     }
 }
 
-use ufmt::{derive::UDebug, uwrite, uwriteln};
+use ufmt_b::{derive::UDebug, uwrite, uwriteln};
 
 #[allow(unused_imports)]
 use crate::third_party::Result::{self, Err, Ok};

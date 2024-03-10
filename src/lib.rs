@@ -31,7 +31,7 @@
 //! With the `std` feature enabled:
 #![cfg_attr(not(feature = "std"), doc = "```ignore")]
 #![cfg_attr(feature = "std", doc = "```")]
-//! use ufmt::{derive::UDebug, uwrite};
+//! use ufmt_b::{derive::UDebug, uwrite};
 //!
 //! #[derive(UDebug)]
 //! struct Pair { x: u32, y: u32 }
@@ -48,7 +48,7 @@
 //! With the `std` feature enabled:
 #![cfg_attr(not(feature = "std"), doc = "```ignore")]
 #![cfg_attr(feature = "std", doc = "```")]
-//! use ufmt::uwrite;
+//! use ufmt_b::uwrite;
 //!
 //! let mut s = String::new();
 //! uwrite!(s, "{:#06x}", 0x42);
@@ -82,7 +82,7 @@
 //!     // IMPORTANT use `tt` fragments instead of `expr` fragments (i.e. `$($exprs:expr),*`)
 //!     ($($tt:tt)*) => {{
 //!         let mut s = String::new();
-//!         match ufmt::uwrite!(&mut s, $($tt)*) {
+//!         match ufmt_b::uwrite!(&mut s, $($tt)*) {
 //!             Ok(_) => Ok(s),
 //!             Err(e) => Err(e),
 //!         }
@@ -148,7 +148,7 @@
 //! ```
 //! use core::{convert::Infallible, fmt, ptr};
 //!
-//! use ufmt::UWrite;
+//! use ufmt_b::UWrite;
 //!
 //! struct W;
 //!
@@ -199,7 +199,7 @@ pub use ufmt_write::UWrite;
 ///
 /// This macro accepts a format string, a list of arguments, and a 'writer'. Arguments will be
 /// formatted according to the specified format string and the result will be passed to the writer.
-/// The writer must have type `[&mut] impl UWrite` or `[&mut] ufmt::Formatter<'_, impl UWrite>`. The
+/// The writer must have type `[&mut] impl UWrite` or `[&mut] ufmt_b::Formatter<'_, impl UWrite>`. The
 /// macro returns the associated `Error` type of the `UWrite`-r.
 ///
 /// The syntax is similar to [`core::write!`] but only a handful of argument types are accepted:

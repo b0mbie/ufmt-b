@@ -1,13 +1,13 @@
 use core::convert::Infallible;
 use std::collections::{BTreeMap, BTreeSet};
 
-use ufmt::{derive::UDebug, UDebug, UWrite, uwrite, uwriteln, Formatter};
+use ufmt_b::{derive::UDebug, UDebug, UWrite, uwrite, uwriteln, Formatter};
 
 macro_rules! uformat {
     ($($tt:tt)*) => {{
         let mut s = String::new();
         #[allow(unreachable_code)]
-        match ufmt::uwrite!(&mut s, $($tt)*) {
+        match ufmt_b::uwrite!(&mut s, $($tt)*) {
             Ok(_) => Ok(s),
             Err(e) => Err(e),
         }
