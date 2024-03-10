@@ -4,8 +4,8 @@ impl<'w, W> Formatter<'w, W>
 where
     W: UWrite + ?Sized,
 {
-    /// Creates a `DebugList` builder designed to assist with creation of `UDebug` implementations
-    /// for list-like structures.
+    /// Creates a [`DebugList`] builder designed to assist with creation of [`UDebug`]
+    /// implementations for list-like structures.
     pub fn debug_list(&mut self) -> Result<DebugList<'_, 'w, W>, W::Error> {
         self.write_str("[")?;
 
@@ -19,8 +19,8 @@ where
         })
     }
 
-    /// Creates a `DebugMap` builder designed to assist with creation of `UDebug` implementations
-    /// for map-like structures.
+    /// Creates a [`DebugMap`] builder designed to assist with creation of [`UDebug`]
+    /// implementations for map-like structures.
     pub fn debug_map(&mut self) -> Result<DebugMap<'_, 'w, W>, W::Error> {
         self.write_str("{")?;
 
@@ -34,8 +34,8 @@ where
         })
     }
 
-    /// Creates a `DebugSet` builder designed to assist with creation of `UDebug` implementations
-    /// for set-like structures.
+    /// Creates a [`DebugSet`] builder designed to assist with creation of [`UDebug`]
+    /// implementations for set-like structures.
     pub fn debug_set(&mut self) -> Result<DebugSet<'_, 'w, W>, W::Error> {
         self.write_str("{")?;
 
@@ -49,8 +49,8 @@ where
         })
     }
 
-    /// Creates a `DebugStruct` builder designed to assist with creation of `UDebug` implementations
-    /// for structs.
+    /// Creates a [`DebugStruct`] builder designed to assist with creation of [`UDebug`]
+    /// implementations for structs.
     pub fn debug_struct(&mut self, name: &str) -> Result<DebugStruct<'_, 'w, W>, W::Error> {
         self.write_str(name)?;
 
@@ -64,8 +64,8 @@ where
         })
     }
 
-    /// Creates a `DebugTuple` builder designed to assist with creation of `UDebug` implementations
-    /// for tuple structs.
+    /// Creates a [`DebugTuple`] builder designed to assist with creation of [`UDebug`]
+    /// implementations for tuple structs.
     pub fn debug_tuple(&mut self, name: &str) -> Result<DebugTuple<'_, 'w, W>, W::Error> {
         self.write_str(name)?;
 
@@ -137,7 +137,7 @@ where
         Ok(self)
     }
 
-    /// Finishes output
+    /// Finishes output.
     pub fn finish(&mut self) -> Result<(), W::Error> {
         if self.formatter.pretty {
             self.formatter.indentation -= 1;
@@ -205,7 +205,7 @@ where
         Ok(self)
     }
 
-    /// Finishes output
+    /// Finishes output.
     pub fn finish(&mut self) -> Result<(), W::Error> {
         self.formatter.write_str("}")
     }
@@ -266,7 +266,7 @@ where
         Ok(self)
     }
 
-    /// Finishes output
+    /// Finishes output.
     pub fn finish(&mut self) -> Result<(), W::Error> {
         self.formatter.write_str("}")
     }
@@ -321,7 +321,7 @@ where
         Ok(self)
     }
 
-    /// Finishes output
+    /// Finishes output.
     pub fn finish(&mut self) -> Result<(), W::Error> {
         if self.formatter.pretty {
             self.formatter.indentation -= 1;
@@ -390,7 +390,7 @@ where
         Ok(self)
     }
 
-    /// Finishes output
+    /// Finishes output.
     pub fn finish(&mut self) -> Result<(), W::Error> {
         if self.formatter.pretty {
             self.formatter.indentation -= 1;
