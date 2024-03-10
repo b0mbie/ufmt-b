@@ -4,7 +4,7 @@ impl<'w, W> Formatter<'w, W>
 where
     W: UWrite + ?Sized,
 {
-    /// Creates a `DebugList` builder designed to assist with creation of `uDebug` implementations
+    /// Creates a `DebugList` builder designed to assist with creation of `UDebug` implementations
     /// for list-like structures.
     pub fn debug_list(&mut self) -> Result<DebugList<'_, 'w, W>, W::Error> {
         self.write_str("[")?;
@@ -19,7 +19,7 @@ where
         })
     }
 
-    /// Creates a `DebugMap` builder designed to assist with creation of `uDebug` implementations
+    /// Creates a `DebugMap` builder designed to assist with creation of `UDebug` implementations
     /// for map-like structures.
     pub fn debug_map(&mut self) -> Result<DebugMap<'_, 'w, W>, W::Error> {
         self.write_str("{")?;
@@ -34,7 +34,7 @@ where
         })
     }
 
-    /// Creates a `DebugSet` builder designed to assist with creation of `uDebug` implementations
+    /// Creates a `DebugSet` builder designed to assist with creation of `UDebug` implementations
     /// for set-like structures.
     pub fn debug_set(&mut self) -> Result<DebugSet<'_, 'w, W>, W::Error> {
         self.write_str("{")?;
@@ -49,7 +49,7 @@ where
         })
     }
 
-    /// Creates a `DebugStruct` builder designed to assist with creation of `uDebug` implementations
+    /// Creates a `DebugStruct` builder designed to assist with creation of `UDebug` implementations
     /// for structs.
     pub fn debug_struct(&mut self, name: &str) -> Result<DebugStruct<'_, 'w, W>, W::Error> {
         self.write_str(name)?;
@@ -64,7 +64,7 @@ where
         })
     }
 
-    /// Creates a `DebugTuple` builder designed to assist with creation of `uDebug` implementations
+    /// Creates a `DebugTuple` builder designed to assist with creation of `UDebug` implementations
     /// for tuple structs.
     pub fn debug_tuple(&mut self, name: &str) -> Result<DebugTuple<'_, 'w, W>, W::Error> {
         self.write_str(name)?;
@@ -82,10 +82,10 @@ where
     }
 }
 
-/// A struct to help with [`uDebug`] implementations.
+/// A struct to help with [`UDebug`] implementations.
 ///
 /// This is useful when you wish to output a formatted list of items as a part of your
-/// [`uDebug::fmt`] implementation.
+/// [`UDebug::fmt`] implementation.
 ///
 /// This can be constructed by the [`Formatter::debug_list`] method.
 pub struct DebugList<'f, 'w, W>
@@ -148,9 +148,9 @@ where
     }
 }
 
-/// A struct to help with [`uDebug`] implementations.
+/// A struct to help with [`UDebug`] implementations.
 ///
-/// This is useful when you wish to output a formatted map as a part of your [`uDebug::fmt`]
+/// This is useful when you wish to output a formatted map as a part of your [`UDebug::fmt`]
 /// implementation.
 ///
 /// This can be constructed by the [`Formatter::debug_map`] method.
@@ -211,10 +211,10 @@ where
     }
 }
 
-/// A struct to help with [`uDebug`] implementations.
+/// A struct to help with [`UDebug`] implementations.
 ///
 /// This is useful when you wish to output a formatted set of items as a part of your
-/// [`uDebug::fmt`] implementation.
+/// [`UDebug::fmt`] implementation.
 ///
 /// This can be constructed by the [`Formatter::debug_set`] method.
 pub struct DebugSet<'f, 'w, W>
@@ -272,9 +272,9 @@ where
     }
 }
 
-/// A struct to help with [`uDebug`] implementations.
+/// A struct to help with [`UDebug`] implementations.
 ///
-/// This is useful when you wish to output a formatted struct as a part of your [`uDebug::fmt`]
+/// This is useful when you wish to output a formatted struct as a part of your [`UDebug::fmt`]
 /// implementation.
 ///
 /// This can be constructed by the [`Formatter::debug_struct`] method.
@@ -341,9 +341,9 @@ where
     }
 }
 
-/// A struct to help with [`uDebug`] implementations.
+/// A struct to help with [`UDebug`] implementations.
 ///
-/// This is useful when you wish to output a formatted tuple as a part of your [`uDebug::fmt`]
+/// This is useful when you wish to output a formatted tuple as a part of your [`UDebug::fmt`]
 /// implementation.
 ///
 /// This can be constructed by the [`Formatter::debug_tuple`] method.

@@ -12,8 +12,8 @@
 //! - [`core::write!`]-like macro.
 //! - A generic [`Formatter<'_, impl UWrite>`] instead of a single [`core::fmt::Formatter`]; the
 //! [`UWrite`] trait has an associated error type so each writer can choose its error type. For
-//! example, the implementation for [`String`](`std::string::String`) uses
-//! [`Infallible`](`std::convert::Infallible`) as its error type.
+//! example, the implementation for Rust's standard heap-allocated `String` uses
+//! [`Infallible`](`core::convert::Infallible`) as its error type.
 //! - [`Formatter::debug_struct`](core::fmt::Formatter::debug_struct)-like API.
 //! - [`UDebug`] derivation macro.
 //! - Pretty formatting (e.g. `{:#?}`) for [`UDebug`].
