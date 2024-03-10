@@ -213,7 +213,7 @@ use core::str;
 
 pub use ufmt_write::uWrite;
 
-/// Write formatted data into a buffer
+/// Write formatted data into a buffer.
 ///
 /// This macro accepts a format string, a list of arguments, and a 'writer'. Arguments will be
 /// formatted according to the specified format string and the result will be passed to the writer.
@@ -233,41 +233,42 @@ pub use ufmt_write::uWrite;
 /// `{{` and `}}` can be used to escape braces.
 pub use ufmt_macros::uwrite;
 
-/// Write formatted data into a buffer, with a newline appended
+/// Write formatted data into a buffer, with a newline appended.
 ///
-/// See [`uwrite!`](macro.uwrite.html) for more details
+/// See [`uwrite!`](macro.uwrite.html) for more details.
 pub use ufmt_macros::uwriteln;
 
 pub use crate::helpers::{DebugList, DebugMap, DebugStruct, DebugTuple};
 
 mod helpers;
 mod impls;
-/// Derive macros
+/// Derive macros.
 pub mod derive {
     pub use ufmt_macros::uDebug;
 }
 
-/// Just like `core::fmt::Debug`
+/// Trait that aims to behave like [`core::fmt::Debug`].
 #[allow(non_camel_case_types)]
 pub trait uDebug {
-    /// Formats the value using the given formatter
+    /// Formats the value using the given formatter.
     fn fmt<W>(&self, _: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
         W: uWrite + ?Sized;
 }
 
-/// Just like `core::fmt::Display`
+/// Trait that aims to behave like [`core::fmt::Display`].
 #[allow(non_camel_case_types)]
 pub trait uDisplay {
-    /// Formats the value using the given formatter
+    /// Formats the value using the given formatter.
     fn fmt<W>(&self, _: &mut Formatter<'_, W>) -> Result<(), W::Error>
     where
         W: uWrite + ?Sized;
 }
 
-/// HEADS UP this is currently an implementation detail and not subject to semver guarantees.
-/// do NOT use this outside the `ufmt` crate
-// options for formatting hexadecimal numbers
+/// Options for formatting hexadecimal numbers.
+/// 
+/// This is currently an implementation detail and not subject to semver guarantees.
+/// Do not use this outside the `ufmt` crate.
 #[doc(hidden)]
 pub struct HexOptions {
     /// when we need to use digits a-f, should they be upper case instead?
@@ -281,7 +282,7 @@ pub struct HexOptions {
 }
 
 impl HexOptions {
-    /// applies the various padding/prefix options while writing the `payload` string
+    /// Applies the various padding/prefix options while writing the `payload` string.
     pub fn with_stuff<W: uWrite + ?Sized>(
         &self,
         fmt: &mut Formatter<'_, W>,
@@ -325,19 +326,20 @@ impl HexOptions {
     }
 }
 
-/// HEADS UP this is currently an implementation detail and not subject to semver guarantees.
-/// do NOT use this outside the `ufmt` crate
-// just like std::fmt::LowerHex
+/// Trait that aims to behave like [`core::fmt::LowerHex`].
+/// 
+/// This is currently an implementation detail and not subject to semver guarantees.
+/// Do not use this outside the `ufmt` crate.
 #[doc(hidden)]
 #[allow(non_camel_case_types)]
 pub trait uDisplayHex {
-    /// Formats the value using the given formatter
+    /// Formats the value using the given formatter.
     fn fmt_hex<W>(&self, _: &mut Formatter<'_, W>, options: HexOptions) -> Result<(), W::Error>
     where
         W: uWrite + ?Sized;
 }
 
-/// Configuration for formatting
+/// Configuration for formatting.
 #[allow(non_camel_case_types)]
 pub struct Formatter<'w, W>
 where
@@ -352,7 +354,7 @@ impl<'w, W> Formatter<'w, W>
 where
     W: uWrite + ?Sized,
 {
-    /// Creates a formatter from the given writer
+    /// Creates a formatter from the given writer.
     pub fn new(writer: &'w mut W) -> Self {
         Self {
             indentation: 0,
@@ -361,7 +363,7 @@ where
         }
     }
 
-    /// Execute the closure with pretty-printing enabled
+    /// Executes the closure with pretty-printing enabled.
     pub fn pretty(
         &mut self,
         f: impl FnOnce(&mut Self) -> Result<(), W::Error>,
@@ -383,7 +385,7 @@ where
         self.writer.write_str(s)
     }
 
-    /// Write whitespace according to the current `self.indentation`
+    /// Writes whitespace according to the current indentation level.
     fn indent(&mut self) -> Result<(), W::Error> {
         for _ in 0..self.indentation {
             self.write_str("    ")?;
@@ -393,7 +395,7 @@ where
     }
 }
 
-// Implementation detail of the `uwrite*!` macros
+// Implementation detail of the `uwrite*!` macros.
 #[doc(hidden)]
 pub trait UnstableDoAsFormatter {
     type Writer: uWrite + ?Sized;
